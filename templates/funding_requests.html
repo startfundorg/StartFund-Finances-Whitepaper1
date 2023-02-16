@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Funding Requests</title>
+  </head>
+  <body>
+    <h1>Funding Requests</h1>
+    <table>
+      <tr>
+        <th>ID</th>
+        <th>Company Name</th>
+        <th>Amount</th>
+        <th>Investors</th>
+        <th>Completed</th>
+        <th>Approved</th>
+        <th>Action</th>
+      </tr>
+      {% for request in requests %}
+      <tr>
+        <td>{{ request.id }}</td>
+        <td>{{ request.company_name }}</td>
+        <td>{{ request.amount }}</td>
+        <td>{{ request.investors }}</td>
+        <td>{{ request.completed }}</td>
+        <td>{{ request.approved }}</td>
+        <td>
+          {% if not request.completed %}
+          <form action="/approve_funding_request" method="post">
+            <input type="hidden" name="contract_address" value="{{ contract_address }}">
+            <input type="hidden" name="account" value="{{ account }}">
+            <input type="hidden" name="request_id" value="{{ request.id }}">
+            <button type="submit">Approve</button>
+          </form>
+          {% endif %}
+          {% if not request.invested %}
+          <form action="/invest_in_funding_request" method="post">
+            <input type="hidden" name="contract_address" value="{{ contract_address }}">
+            <input type="hidden" name="account" value="{{ account }}">
+            <input type="hidden" name="request_id" value="{{ request.id }}">
+            <label for="amount">Amount</label>
+            <input type="text" name="amount" required><br>
+            <button type="submit">Invest</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>
